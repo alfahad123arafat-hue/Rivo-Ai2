@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="A private, self-hosted AI assistant powered by Qwen and Ollama.">
+  <title>Rivo AI</title>
+  <link rel="stylesheet" href="/static/vendor/highlight/styles/github-dark.min.css" id="hl-theme-dark">
+  <link rel="stylesheet" href="/static/vendor/highlight/styles/github.min.css" id="hl-theme-light" disabled>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-top">
+        <a class="brand" href="/" aria-label="Rivo AI home"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.5 27.5 10v12L16 28.5 4.5 22V10L16 3.5Z"/><path d="m10.5 18 3.2-8 3.1 8m-5.2-2.5h4.2M19.7 10v8"/></svg></span><span>rivo<span class="brand-ai">ai</span></span></a>
+        <button class="icon-btn sidebar-close" id="close-sidebar" aria-label="Close sidebar"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+      <button class="new-chat" id="new-chat"><span class="plus">＋</span><span>New chat</span><kbd>⌘ K</kbd></button>
+      <div class="history-label"><span id="history-label">YOUR CHATS</span> <button id="refresh-chats" class="tiny-icon" title="Refresh chats" aria-label="Refresh chats">↻</button></div>
+      <nav class="chat-list" id="chat-list" aria-label="Chat history"></nav>
+      <div class="sidebar-bottom">
+        <div class="model-card"><span class="model-light" id="model-light"></span><div><strong id="model-label">Qwen 3.5 · 4B</strong><small id="model-state">Checking model…</small></div><button class="tiny-icon" id="status-refresh" title="Refresh model status" aria-label="Refresh model status">↻</button></div>
+        <button class="profile-button" id="settings-open"><span class="avatar">R</span><span class="profile-label"><strong>Rivo AI</strong><small>Settings &amp; preferences</small></span><svg class="chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </aside>
+    <div class="sidebar-scrim" id="sidebar-scrim"></div>
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-btn menu-toggle" id="open-sidebar" aria-label="Open sidebar"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div class="mobile-brand">rivo<span>ai</span></div>
+        <div class="topbar-spacer"></div>
+        <span class="privacy-tag"><span></span><span id="privacy-label">Private &amp; self-hosted</span></span>
+        <button class="language-toggle" id="language-toggle" type="button" aria-label="Switch language">বাংলা</button>
+        <button class="icon-btn theme-toggle" id="theme-toggle" title="Toggle theme" aria-label="Toggle light/dark theme"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+      </header>
+      <section class="conversation-view" id="conversation-view">
+        <div class="welcome" id="welcome">
+          <div class="welcome-orb"><div class="orb-core"></div><span class="orb-spark spark-a"></span><span class="orb-spark spark-b"></span><span class="orb-spark spark-c"></span></div>
+          <p class="eyebrow">YOUR PRIVATE AI WORKSPACE</p>
+          <h1>What can I help<br class="mobile-break"> you <span>build?</span></h1>
+          <p class="welcome-copy">A thoughtful assistant for ideas, code, and everything in between.</p>
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Help me debug a Python script. I will paste the code and error."><span class="suggestion-icon code-icon">&lt;/&gt;</span><span><strong>Debug some code</strong><small>Find the issue and fix it</small></span><span class="suggestion-arrow">↗</span></button>
+            <button class="suggestion" data-prompt="Help me plan and build a responsive website. Ask me what it should do."><span class="suggestion-icon web-icon">◫</span><span><strong>Build something for the web</strong><small>Plan a site or app together</small></span><span class="suggestion-arrow">↗</span></button>
+            <button class="suggestion" data-prompt="Explain a technical topic clearly, with a practical example."><span class="suggestion-icon idea-icon">✳</span><span><strong>Explain a tricky topic</strong><small>Make the complex feel simple</small></span><span class="suggestion-arrow">↗</span></button>
+          </div>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </section>
+      <div class="composer-zone">
+        <form class="composer" id="composer-form">
+          <textarea id="prompt-input" rows="1" maxlength="32000" placeholder="Message Rivo AI…" aria-label="Message Rivo AI"></textarea>
+          <div class="composer-tools"><span class="composer-hint">Enter to send · Shift + Enter for a new line</span><button class="send-button" id="send-button" type="submit" aria-label="Send message"><svg class="send-icon" viewBox="0 0 24 24"><path d="M12 19V5m-7 7 7-7 7 7"/></svg><svg class="stop-icon" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button></div>
+        </form>
+        <p class="disclaimer">Rivo AI can make mistakes. Check important information.</p>
+      </div>
+    </main>
+  </div>
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title"><div class="modal-heading"><div><p class="eyebrow">PERSONALIZE YOUR SPACE</p><h2 id="settings-title">Settings</h2></div><button class="icon-btn" data-close-modal aria-label="Close settings"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><label class="field-label" for="system-prompt">System prompt</label><p class="field-help">Set the assistant's role and response style. This applies to all conversations.</p><textarea class="settings-textarea" id="system-prompt" spellcheck="false"></textarea><div class="settings-meta"><span id="settings-model">Model: qwen3.5:4b</span><button class="text-button" id="reset-prompt">Restore default</button></div><div class="modal-actions"><span class="save-status" id="save-status"></span><button class="secondary-button" data-close-modal>Cancel</button><button class="primary-button" id="save-settings">Save changes</button></div></section></div>
+  <div class="modal-backdrop" id="rename-modal" aria-hidden="true"><section class="modal small-modal" role="dialog" aria-modal="true" aria-labelledby="rename-title"><div class="modal-heading"><div><p class="eyebrow">CHAT DETAILS</p><h2 id="rename-title">Rename chat</h2></div><button class="icon-btn" data-close-modal aria-label="Close"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><label class="field-label" for="rename-input">Conversation name</label><input class="text-input" id="rename-input" maxlength="120"><div class="modal-actions"><span></span><button class="secondary-button" data-close-modal>Cancel</button><button class="primary-button" id="save-rename">Rename</button></div></section></div>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="login-screen" id="login-screen" hidden><div class="login-card"><a class="brand login-brand" href="/"><span class="brand-mark"><svg viewBox="0 0 32 32"><path d="M16 3.5 27.5 10v12L16 28.5 4.5 22V10L16 3.5Z"/><path d="m10.5 18 3.2-8 3.1 8m-5.2-2.5h4.2M19.7 10v8"/></svg></span><span>rivo<span class="brand-ai">ai</span></span></a><p class="eyebrow">PRIVATE WORKSPACE</p><h1>Welcome back.</h1><p>Enter your access password to continue.</p><form id="login-form"><input class="text-input" type="password" id="login-password" autocomplete="current-password" placeholder="Access password" required><p class="login-error" id="login-error"></p><button class="primary-button login-submit" type="submit">Unlock workspace <span>→</span></button></form></div></div>
+  <script src="/static/vendor/marked.umd.js" defer></script>
+  <script src="/static/vendor/purify.min.js" defer></script>
+  <script src="/static/vendor/highlight/highlight.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/bash.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/css.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/javascript.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/json.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/php.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/python.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/shell.min.js" defer></script>
+  <script src="/static/vendor/highlight/languages/xml.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
